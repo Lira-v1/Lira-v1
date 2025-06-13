@@ -1,6 +1,6 @@
 async function checkGPTCommands() {
   try {
-    const res = await fetch('input.json?' + Date.now());
+    const res = await fetch('https://raw.githubusercontent.com/Lira-v1/Lira-v1/main/input.json?' + Date.now());
     const cmd = await res.json();
     if (!cmd || !cmd.action) return;
 
@@ -10,9 +10,16 @@ async function checkGPTCommands() {
       logMessage("🤖 GPT: " + cmd.content);
     } else if (cmd.action === "clear_tasks") {
       clearTasks();
+    } else if (cmd.action === "multi" && Array.isArray(cmd.content)) {
+      for (const subCmd of cmd.content) {
+        if (subCmd.action === "add_task") addTaskFromGPT(subCmd.content);
+        else if (subCmd.action === "log") logMessage("🤖 GPT: " + subCmd.content);
+        else if (subCmd.action === "clear_tasks") clearTasks();
+      }
     }
 
-    logMessage("✅ Команда GPT выполнена: " + cmd.action);
+    // Обнуление после выполнения
+    logMessage("✅ Команды GPT обработаны: " + cmd.action);
   } catch (e) {
     logMessage("⚠ Ошибка gpt-bridge: " + e.message);
   }
@@ -29,4 +36,4 @@ function clearTasks() {
   logMessage("🧹 Задачи очищены по команде GPT");
 }
 
-setInterval(checkGPTCommands, 15000); // 15 секунд
+setInterval(checkGPTCommands, 15000);
