@@ -1,7 +1,4 @@
-{
-  "action": "",
-  "content": ""
-}
+
 {
   "action": "add_task",
   "content": "GPT успешно добавил задачу через JSON"
