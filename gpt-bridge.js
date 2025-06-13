@@ -1,6 +1,6 @@
 async function checkGPTCommands() {
   try {
-    const res = await fetch('input.json?' + Date.now());
+    const res = await fetch('https://lira-gpt-bridge.onrender.com/input.json?' + Date.now());
     const cmd = await res.json();
     if (!cmd || !cmd.action) return;
 
@@ -12,9 +12,9 @@ async function checkGPTCommands() {
       clearTasks();
     }
 
-    // Обнуляем команду
-    await fetch('input.json', {
-      method: 'PUT',
+    // Обнуляем команду через мост
+    await fetch('https://lira-gpt-bridge.onrender.com/update', {
+      method: 'POST',
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action: "", content: "" })
     });
@@ -34,4 +34,4 @@ function clearTasks() {
   logMessage("🧹 Задачи очищены по команде GPT");
 }
 
-setInterval(checkGPTCommands, 5000);
+setInterval(checkGPTCommands, 5000);
