@@ -1,6 +1,6 @@
 async function checkGPTCommands() {
   try {
-    const res = await fetch('https://raw.githubusercontent.com/Lira-v1/Lira-v1/main/input.json?' + Date.now());
+    const res = await fetch('input.json?' + Date.now());
     const cmd = await res.json();
     if (!cmd || !cmd.action) return;
 
@@ -12,7 +12,6 @@ async function checkGPTCommands() {
       clearTasks();
     }
 
-    // Обнуление теперь происходит через GitHub Actions
     logMessage("✅ Команда GPT выполнена: " + cmd.action);
   } catch (e) {
     logMessage("⚠ Ошибка gpt-bridge: " + e.message);
@@ -30,4 +29,4 @@ function clearTasks() {
   logMessage("🧹 Задачи очищены по команде GPT");
 }
 
-setInterval(checkGPTCommands, 5000);
+setInterval(checkGPTCommands, 15000); // 15 секунд
