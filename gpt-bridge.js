@@ -1,6 +1,6 @@
 async function checkGPTCommands() {
   try {
-    const res = await fetch('https://lira-gpt-bridge.onrender.com/input.json?' + Date.now());
+    const res = await fetch('https://raw.githubusercontent.com/ИМЯ_ПОЛЬЗОВАТЕЛЯ/Lira-v1/main/input.json?' + Date.now());
     const cmd = await res.json();
     if (!cmd || !cmd.action) return;
 
@@ -12,12 +12,8 @@ async function checkGPTCommands() {
       clearTasks();
     }
 
-    // Обнуляем команду через мост
-    await fetch('https://lira-gpt-bridge.onrender.com/update', {
-      method: 'POST',
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "", content: "" })
-    });
+    // Внимание: теперь обнуление происходит на стороне GitHub Actions
+    logMessage("✅ Команда GPT выполнена: " + cmd.action);
   } catch (e) {
     logMessage("⚠ Ошибка gpt-bridge: " + e.message);
   }
@@ -34,4 +30,5 @@ function clearTasks() {
   logMessage("🧹 Задачи очищены по команде GPT");
 }
 
+// Проверять каждые 5 секунд
 setInterval(checkGPTCommands, 5000);
